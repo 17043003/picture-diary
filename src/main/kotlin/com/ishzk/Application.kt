@@ -1,5 +1,6 @@
 package com.ishzk
 
+import com.ishzk.module.DatabaseFactory
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import com.ishzk.plugins.*
@@ -16,6 +17,8 @@ fun Application.module(testing: Boolean = false) {
     configureSerialization()
     configureHTTP()
     configureSecurity()
+
+    DatabaseFactory.init()
 
     routing {
     }
