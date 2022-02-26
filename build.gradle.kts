@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -7,6 +9,7 @@ val postgres_version: String by project
 plugins {
     application
     kotlin("jvm") version "1.6.10"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "com.ishzk"
@@ -35,4 +38,8 @@ dependencies {
     implementation("org.postgresql:postgresql:$postgres_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+}
+
+tasks.withType<ShadowJar> {
+    archiveFileName.set("picture-diary.jar")
 }
