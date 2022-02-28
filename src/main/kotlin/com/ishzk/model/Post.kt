@@ -7,13 +7,20 @@ object PostsTable: IntIdTable("posts") {
     val body = varchar("body", 65535).nullable()
 }
 
+object ImagesTable: IntIdTable("images") {
+    val url = varchar("url", 255)
+    val postId = integer("postId").references(PostsTable.id, fkName = "fk_post_id")
+}
+
 data class Post(
     val id: Long,
     val title: String,
-    val body: String
+    val body: String,
+    val imageUrls: List<String>? = null
 )
 
 data class PostRequest(
     val title: String,
-    val body: String
+    val body: String,
+    val imageUrls: List<String>? = null
 )
