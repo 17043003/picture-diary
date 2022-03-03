@@ -19,9 +19,7 @@ class PostRepository {
 
     fun getPosts(): List<Post> {
         return transaction {
-            PostsTable.selectAll()
-        }.map {
-            PostsTable.toPost(it)
+            PostsTable.selectAll().map { PostsTable.toPost(it) }
         }
     }
 }
