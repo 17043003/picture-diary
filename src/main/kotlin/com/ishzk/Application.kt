@@ -26,6 +26,11 @@ fun Application.module(testing: Boolean = false) {
     val postRepository = PostRepository()
 
     routing {
+        get("/api/post"){
+            val posts = postRepository.getPosts()
+            call.respond(posts)
+        }
+
         post("/api/post"){
             val postParameters: Parameters = call.receiveParameters()
             postRepository.newPost(
