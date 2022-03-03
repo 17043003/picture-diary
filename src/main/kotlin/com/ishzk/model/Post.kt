@@ -16,11 +16,6 @@ object PostsTable: IntIdTable("posts") {
     }
 }
 
-object ImagesTable: IntIdTable("images") {
-    val url = varchar("url", 255)
-    val postId = integer("postId").references(PostsTable.id, fkName = "fk_post_id")
-}
-
 data class Post(
     val id: Long,
     val title: String,
