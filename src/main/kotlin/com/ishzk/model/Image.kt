@@ -22,7 +22,3 @@ data class Image(
     val postId: Long,
 )
 
-data class ImageRequest(
-    val url: String,
-    val postId: Long
-)

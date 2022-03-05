@@ -37,6 +37,7 @@ fun Application.module(testing: Boolean = false) {
                 PostRequest(
                     title = postParameters["title"]?: "",
                     body = postParameters["body"] ?: "",
+                    imageUrls = listOf(postParameters["imageUrl"] ?: "")
                 )
             )
             call.respond("status" to "200")
