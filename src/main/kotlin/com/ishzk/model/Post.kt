@@ -11,7 +11,8 @@ object PostsTable: IntIdTable("posts") {
         return Post(
             id = row[id].value.toLong(),
             title = row[title]!!,
-            body = row[body]!!
+            body = row[body]!!,
+            imageUrls = listOf(row[ImagesTable.url])
         )
     }
 }
