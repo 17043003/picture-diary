@@ -4,7 +4,9 @@ import com.ishzk.model.ImagesTable
 import com.ishzk.model.Post
 import com.ishzk.model.PostRequest
 import com.ishzk.model.PostsTable
+import com.ishzk.model.PostsTable.toPost
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.lang.IllegalArgumentException
@@ -28,7 +30,16 @@ class PostRepository {
     fun getPosts(): List<Post> {
         return transaction {
             PostsTable.leftJoin(otherTable = ImagesTable)
-                .selectAll().map { PostsTable.toPost(it) }
+                .selectAll().map { toPost(it) }
+        }
+    }
+
+    fun getPost(postId: Long): Post {
+        return transaction {
+            PostsTable.leftJoin(otherTable = ImagesTable)
+                .select {
+                PostsTable.id eq postId.toInt()
+            }.map { toPost(it) }.single()
         }
     }
 }

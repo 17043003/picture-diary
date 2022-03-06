@@ -10,6 +10,7 @@ import com.typesafe.config.ConfigFactory
 import io.ktor.application.*
 import io.ktor.config.*
 import io.ktor.http.*
+import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -31,6 +32,11 @@ fun Application.module(testing: Boolean = false) {
             call.respond(posts)
         }
 
+        get<PostLocation> {
+            val post = postRepository.getPost(it.id)
+            call.respond(post)
+        }
+
         post("/api/post"){
             val postParameters: Parameters = call.receiveParameters()
             postRepository.newPost(
@@ -44,3 +50,6 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 }
+
+@Location("/api/post/{id}")
+class PostLocation(val id: Long)
