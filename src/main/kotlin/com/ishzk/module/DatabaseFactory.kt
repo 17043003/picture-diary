@@ -2,6 +2,7 @@ package com.ishzk.module
 
 import com.ishzk.model.ImagesTable
 import com.ishzk.model.PostsTable
+import com.ishzk.model.UsersTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -19,7 +20,7 @@ object DatabaseFactory {
             SchemaUtils.apply {
                 create(PostsTable)
                 create(ImagesTable)
-
+                create(UsersTable)
             }
 
         }
