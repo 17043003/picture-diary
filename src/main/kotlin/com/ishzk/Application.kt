@@ -64,7 +64,9 @@ fun Application.module(testing: Boolean = false) {
                 )
                 call.respond(mapOf("status" to "200", "userId" to userId))
             }catch (e: IllegalArgumentException){
-                call.respond("status" to "400")
+                call.respond("status" to "500")
+            }catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException){
+                call.respond("status" to "500")
             }
         }
     }
