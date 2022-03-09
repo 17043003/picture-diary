@@ -1,38 +1,65 @@
 package com.ishzk.plugins
 
+import com.ishzk.model.PostRequest
+import com.ishzk.model.UserRequest
+import com.ishzk.repository.PostRepository
+import com.ishzk.repository.UserRepository
 import io.ktor.routing.*
 import io.ktor.http.*
 import io.ktor.locations.*
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.request.*
+import java.lang.IllegalArgumentException
 
-fun Application.configureRouting() {
+fun Application.configureRouting(
+    postRepository: PostRepository,
+    userRepository: UserRepository
+) {
     install(Locations) {
     }
 
     routing {
-        get("/") {
-            call.respondText("Hello ktor!!!")
+        get("/api/post"){
+            val posts = postRepository.getPosts()
+            call.respond(posts)
         }
-        get<MyLocation> {
-                call.respondText("Location: name=${it.name}, arg1=${it.arg1}, arg2=${it.arg2}")
+
+        get<PostLocation> {
+            val post = postRepository.getPost(it.id)
+            call.respond(post)
+        }
+
+        post("/api/post"){
+            val postParameters: Parameters = call.receiveParameters()
+            postRepository.newPost(
+                PostRequest(
+                    title = postParameters["title"]?: "",
+                    body = postParameters["body"] ?: "",
+                    imageUrls = listOf(postParameters["imageUrl"] ?: "")
+                )
+            )
+            call.respond("status" to "200")
+        }
+
+        post("/api/user"){
+            val userParameters: Parameters = call.receiveParameters()
+            try {
+                val userId = userRepository.newUser(
+                    UserRequest(
+                        name = userParameters["name"] ?: "",
+                        email = userParameters["email"] ?: ""
+                    )
+                )
+                call.respond(status = HttpStatusCode.OK, mapOf("status" to "200", "userId" to userId))
+            }catch (e: IllegalArgumentException){
+                call.respond(status = HttpStatusCode.BadRequest, "status" to "500")
+            }catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException){
+                call.respond(status = HttpStatusCode.BadRequest, "status" to "500")
             }
-            // Register nested routes
-            get<Type.Edit> {
-                call.respondText("Inside $it")
-            }
-            get<Type.List> {
-                call.respondText("Inside $it")
-            }
+        }
     }
 }
-@Location("/location/{name}")
-class MyLocation(val name: String, val arg1: Int = 42, val arg2: String = "default")
-@Location("/type/{name}") data class Type(val name: String) {
-    @Location("/edit")
-    data class Edit(val type: Type)
 
-    @Location("/list/{page}")
-    data class List(val type: Type, val page: Int)
-}
+@Location("/api/post/{id}")
+class PostLocation(val id: Long)
