@@ -42,6 +42,43 @@ class ApplicationTest {
             }.apply {
                 assertEquals(HttpStatusCode.OK, response.status())
             }
+
+            handleRequest(HttpMethod.Post, "/api/user"){
+                addHeader(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded.toString())
+                setBody(listOf("name" to "test", "email" to "test@gmail.com").formUrlEncode())
+            }.apply {
+                assertEquals(HttpStatusCode.BadRequest, response.status())
+            }
+        }
+    }
+
+    @Test
+    fun testPost() {
+        withTestApplication({
+            configureRouting(
+                postRepository = PostRepository(),
+                userRepository = UserRepository()
+            )
+            configureSerialization()
+            configureHTTP()
+        }) {
+            DatabaseDelete.delete()
+            DatabaseFactory.init()
+
+            handleRequest(HttpMethod.Post, "/api/post"){
+                addHeader(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded.toString())
+                setBody(listOf("title" to "test", "body" to "test").formUrlEncode())
+            }.apply {
+                assertEquals(HttpStatusCode.OK, response.status())
+            }
+
+            handleRequest(HttpMethod.Get, "/api/post").apply {
+                assertEquals(HttpStatusCode.OK, response.status())
+            }
+
+            handleRequest(HttpMethod.Get, "/api/post/1").apply {
+                assertEquals(HttpStatusCode.OK, response.status())
+            }
         }
     }
 }
