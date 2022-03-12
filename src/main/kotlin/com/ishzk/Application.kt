@@ -21,13 +21,13 @@ import java.lang.IllegalArgumentException
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 fun Application.module(testing: Boolean = false) {
+    configureSecurity()
     configureRouting(
         PostRepository(),
         UserRepository()
     )
     configureSerialization()
     configureHTTP()
-    configureSecurity()
 
     DatabaseFactory.init()
 

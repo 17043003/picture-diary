@@ -8,6 +8,8 @@ import io.ktor.routing.*
 import io.ktor.http.*
 import io.ktor.locations.*
 import io.ktor.application.*
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.response.*
 import io.ktor.request.*
 import java.lang.IllegalArgumentException
@@ -20,7 +22,7 @@ fun Application.configureRouting(
     }
 
     routing {
-        get("/api/post"){
+        get("/api/post") {
             val posts = postRepository.getPosts()
             call.respond(posts)
         }
@@ -30,11 +32,11 @@ fun Application.configureRouting(
             call.respond(post)
         }
 
-        post("/api/post"){
+        post("/api/post") {
             val postParameters: Parameters = call.receiveParameters()
             postRepository.newPost(
                 PostRequest(
-                    title = postParameters["title"]?: "",
+                    title = postParameters["title"] ?: "",
                     body = postParameters["body"] ?: "",
                     imageUrls = listOf(postParameters["imageUrl"] ?: "")
                 )
@@ -56,6 +58,20 @@ fun Application.configureRouting(
                 call.respond(status = HttpStatusCode.BadRequest, "status" to "500")
             }catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException){
                 call.respond(status = HttpStatusCode.BadRequest, "status" to "500")
+            }
+        }
+
+        authenticate("jwt-auth") {
+            get("/api/user"){
+                val principal = call.principal<JWTPrincipal>()
+                val email = principal?.payload?.getClaim("email")?.asString()
+
+                if (email != null) {
+                    val user = userRepository.getUser(email)
+                    call.respond(user)
+                }else {
+                    call.respond(HttpStatusCode.Unauthorized)
+                }
             }
         }
     }
