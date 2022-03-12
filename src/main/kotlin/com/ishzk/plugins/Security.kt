@@ -32,7 +32,7 @@ fun Application.configureSecurity() {
     val audience = environment.config.property("jwt.audience").getString()
     
     authentication {
-            jwt {
+            jwt("jwt-auth") {
                 realm = environment.config.property("jwt.realm").getString()
                 verifier(
                     JWT
@@ -71,7 +71,7 @@ fun Application.configureSecurity() {
             val token = JWT.create()
                 .withAudience(audience)
                 .withIssuer(issuer)
-                .withClaim("name", user.name)
+                .withClaim("email", user.email)
                 .withExpiresAt(Date(System.currentTimeMillis() + 60000))
                 .sign(Algorithm.HMAC256(secret))
             call.respond(hashMapOf("token" to token))
