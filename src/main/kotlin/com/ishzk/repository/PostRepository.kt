@@ -17,6 +17,7 @@ class PostRepository {
             val id = PostsTable.insert {
                 it[title] = request.title
                 it[body] = request.body
+                it[userId] = request.userId.toInt()
             }.getOrNull(PostsTable.id) ?: throw IllegalArgumentException("failed to save post.")
 
             if(request.imageUrls.isNullOrEmpty()) return@transaction

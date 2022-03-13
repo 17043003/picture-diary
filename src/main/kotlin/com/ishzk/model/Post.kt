@@ -30,5 +30,6 @@ data class Post(
 data class PostRequest(
     val title: String,
     val body: String,
-    val imageUrls: List<String>? = null
+    val imageUrls: List<String>? = null,
+    val userId: Long
 )
