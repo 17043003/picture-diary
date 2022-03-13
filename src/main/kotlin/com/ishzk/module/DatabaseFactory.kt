@@ -18,9 +18,9 @@ object DatabaseFactory {
 
         transaction {
             SchemaUtils.apply {
+                create(UsersTable)
                 create(PostsTable)
                 create(ImagesTable)
-                create(UsersTable)
             }
 
         }
