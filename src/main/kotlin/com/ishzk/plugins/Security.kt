@@ -72,7 +72,7 @@ fun Application.configureSecurity() {
                 .withAudience(audience)
                 .withIssuer(issuer)
                 .withClaim("email", user.email)
-                .withExpiresAt(Date(System.currentTimeMillis() + 60000))
+                .withExpiresAt(Date(System.currentTimeMillis() + 1000 * 60 * 5))
                 .sign(Algorithm.HMAC256(secret))
             call.respond(hashMapOf("token" to token))
         }
