@@ -51,7 +51,7 @@ fun Application.configureRouting(
                         userId = user.id,
                     )
                 )
-                call.respond("status" to "200")
+                call.respond(mapOf("status" to "200"))
             }
 
             get("/api/user"){
