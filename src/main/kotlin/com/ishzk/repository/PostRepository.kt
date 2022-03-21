@@ -18,6 +18,8 @@ class PostRepository {
                 it[title] = request.title
                 it[body] = request.body
                 it[userId] = request.userId.toInt()
+                it[created] = request.created
+                it[updated] = request.updated
             }.getOrNull(PostsTable.id) ?: throw IllegalArgumentException("failed to save post.")
 
             if(request.imageUrls.isNullOrEmpty()) return@transaction
