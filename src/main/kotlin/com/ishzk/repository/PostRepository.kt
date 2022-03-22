@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import java.lang.IllegalArgumentException
 
 class PostRepository {
@@ -26,6 +27,16 @@ class PostRepository {
             ImagesTable.insert {
                 it[url] = request.imageUrls[0]
                 it[postId] = id.value
+            }
+        }
+    }
+
+    fun updatePost(request: PostRequest, id: Long): Int{
+        return transaction {
+            PostsTable.update({PostsTable.id eq id.toInt()}) {
+                it[title] = request.title
+                it[body] = request.body
+                it[updated] = request.updated
             }
         }
     }
