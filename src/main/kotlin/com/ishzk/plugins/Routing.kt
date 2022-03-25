@@ -54,6 +54,34 @@ fun Application.configureRouting(
                 call.respond(status = HttpStatusCode.OK, mapOf("status" to "200"))
             }
 
+            put("/api/post/{id}") {
+                val id = call.parameters["id"]?.toLong()
+                if(id == null) {
+                    call.respond(HttpStatusCode.BadRequest)
+                    return@put
+                }
+
+                val post = postRepository.getPost(id)
+                val principal = call.principal<JWTPrincipal>()
+                val email = principal?.payload?.getClaim("email")?.asString()
+                val user = if (email != null) {
+                    userRepository.getUser(email)
+                } else {
+                    null
+                } ?: return@put
+
+                val parameters = call.receiveParameters()
+                postRepository.updatePost(
+                    PostRequest(
+                        title = parameters["title"] ?: "",
+                        body = parameters["body"] ?: "",
+                        imageUrls = listOf(parameters["imageUrl"] ?: ""),
+                        userId = user.id,
+                    ),
+                    post.id
+                )
+            }
+
             get("/api/user"){
                 val principal = call.principal<JWTPrincipal>()
                 val email = principal?.payload?.getClaim("email")?.asString()
