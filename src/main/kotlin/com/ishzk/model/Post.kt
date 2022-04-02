@@ -20,8 +20,8 @@ object PostsTable: IntIdTable("posts") {
             body = row[body]!!,
             imageUrls = listOf(row[ImagesTable.url]),
             userId = row[userId].toLong(),
-            created = row[created],
-            updated = row[updated],
+            created = row[created].millis,
+            updated = row[updated].millis,
         )
     }
 }
@@ -32,8 +32,8 @@ data class Post(
     val body: String,
     val imageUrls: List<String>? = null,
     val userId: Long,
-    val created: DateTime,
-    val updated: DateTime,
+    val created: Long,
+    val updated: Long,
 )
 
 data class PostRequest(
