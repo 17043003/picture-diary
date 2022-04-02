@@ -71,7 +71,7 @@ fun Application.configureRouting(
                 } ?: return@put
 
                 val parameters = call.receiveParameters()
-                postRepository.updatePost(
+                val updatedID = postRepository.updatePost(
                     PostRequest(
                         title = parameters["title"] ?: "",
                         body = parameters["body"] ?: "",
@@ -80,6 +80,7 @@ fun Application.configureRouting(
                     ),
                     post.id
                 )
+                call.respond(status = HttpStatusCode.OK, mapOf("status" to "200", "id" to updatedID))
             }
 
             get("/api/user"){
