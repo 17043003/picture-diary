@@ -82,6 +82,16 @@ fun Application.configureRouting(
                 call.respond(status = HttpStatusCode.OK, mapOf("status" to "200", "id" to id))
             }
 
+            delete("/api/post/{id}"){
+                val id = call.parameters["id"]?.toLong()
+                if(id == null) {
+                    call.respond(HttpStatusCode.BadRequest)
+                    return@delete
+                }
+                postRepository.deletePost(id)
+                call.respond(HttpStatusCode.OK, mapOf("status" to "200"))
+            }
+
             get("/api/user"){
                 val principal = call.principal<JWTPrincipal>()
                 val email = principal?.payload?.getClaim("email")?.asString()
