@@ -5,6 +5,7 @@ val kotlin_version: String by project
 val logback_version: String by project
 val exposedVersion: String by project
 val postgres_version: String by project
+val spring_security_version: String by project
 
 plugins {
     application
@@ -36,6 +37,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jodatime:$exposedVersion")
     implementation("org.postgresql:postgresql:$postgres_version")
+    implementation("org.springframework.security:spring-security-web:$spring_security_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
