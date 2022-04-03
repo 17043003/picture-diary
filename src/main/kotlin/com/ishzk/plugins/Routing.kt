@@ -43,7 +43,7 @@ fun Application.configureRouting(
                     null
                 } ?: return@post
 
-                postRepository.newPost(
+                val id = postRepository.newPost(
                     PostRequest(
                         title = postParameters["title"] ?: "",
                         body = postParameters["body"] ?: "",
@@ -51,7 +51,7 @@ fun Application.configureRouting(
                         userId = user.id,
                     )
                 )
-                call.respond(status = HttpStatusCode.OK, mapOf("status" to "200"))
+                call.respond(status = HttpStatusCode.OK, mapOf("status" to "200", "id" to id))
             }
 
             put("/api/post/{id}") {
@@ -71,16 +71,25 @@ fun Application.configureRouting(
                 } ?: return@put
 
                 val parameters = call.receiveParameters()
-                val updatedID = postRepository.updatePost(
+                postRepository.updatePost(
                     PostRequest(
                         title = parameters["title"] ?: "",
                         body = parameters["body"] ?: "",
                         imageUrls = listOf(parameters["imageUrl"] ?: ""),
                         userId = user.id,
-                    ),
-                    post.id
+                    ), post.id
                 )
-                call.respond(status = HttpStatusCode.OK, mapOf("status" to "200", "id" to updatedID))
+                call.respond(status = HttpStatusCode.OK, mapOf("status" to "200", "id" to id))
+            }
+
+            delete("/api/post/{id}"){
+                val id = call.parameters["id"]?.toLong()
+                if(id == null) {
+                    call.respond(HttpStatusCode.BadRequest)
+                    return@delete
+                }
+                postRepository.deletePost(id)
+                call.respond(HttpStatusCode.OK, mapOf("status" to "200"))
             }
 
             get("/api/user"){
