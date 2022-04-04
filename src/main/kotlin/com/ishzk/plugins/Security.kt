@@ -15,6 +15,7 @@ import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.request.*
 import io.ktor.routing.*
+import org.springframework.security.crypto.bcrypt.BCrypt
 import java.util.*
 
 fun Application.configureSecurity() {
@@ -62,7 +63,7 @@ fun Application.configureSecurity() {
                 null
             }
 
-            if(user == null) {
+            if(user == null || !BCrypt.checkpw(userParam["password"], user.passwordDigest)) {
                 call.respond(
                     HttpStatusCode.Unauthorized,
                     "メールアドレスかパスワードが間違っています")

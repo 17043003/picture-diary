@@ -2,7 +2,6 @@ package com.ishzk.module
 
 import com.ishzk.model.ImagesTable
 import com.ishzk.model.PostsTable
-import com.ishzk.model.User
 import com.ishzk.model.UsersTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils

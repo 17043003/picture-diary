@@ -111,7 +111,8 @@ fun Application.configureRouting(
                 val userId = userRepository.newUser(
                     UserRequest(
                         name = userParameters["name"] ?: "",
-                        email = userParameters["email"] ?: ""
+                        email = userParameters["email"] ?: "",
+                        password = userParameters["password"] ?: "",
                     )
                 )
                 call.respond(status = HttpStatusCode.OK, mapOf("status" to "200", "userId" to userId))
