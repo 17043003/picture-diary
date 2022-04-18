@@ -32,6 +32,8 @@ fun Application.module(testing: Boolean = false) {
     DatabaseFactory.init()
 
     routing {
-
+        get("/"){
+            call.respond(HttpStatusCode.OK, mapOf("status" to "ok"))
+        }
     }
 }
